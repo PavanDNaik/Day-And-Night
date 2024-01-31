@@ -1,0 +1,15 @@
+.board-container{
+  height: 90vh;
+  width: 90vh;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+}
+.cell{
+  flex: 1;
+  border: 0.2px solid black;
+}
+.grid-row{
+  display: flex;
+  flex: 1;
+}

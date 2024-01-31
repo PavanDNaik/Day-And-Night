@@ -9,21 +9,26 @@ const getBound = (ref) => {
 };
 
 function Ball({ boardRef }) {
-  const [move, setMove] = useState(4);
-  const [x, setX] = useState(201);
-  const [y, setY] = useState(300);
+  const [move, setMove] = useState(3);
+  const [x, setX] = useState(100);
+  const [y, setY] = useState(120);
   const [boardLimit, setBoardLimit] = useState({});
   const [ballLimit, setBallLimit] = useState({});
+  const [cellBound, setCellBound] = useState({});
   const ballRef = useRef(null);
   const style = { transform: `translate(${x}px,${y}px)` };
 
   useEffect(() => {
-    setBoardLimit(getBound(boardRef));
     setBallLimit(getBound(ballRef));
+    setBoardLimit(getBound(boardRef));
+    setCellBound({
+      width: boardRef.current.offsetWidth / 20,
+      height: boardRef.current.offsetHeight / 20,
+    });
   }, []);
 
   const handleMove = () => {
-    let offSet = move > 0 ? 1 : -1;
+    let offSet = move > 0 ? 2 : -2;
     switch (Math.abs(move)) {
       case 1:
         setX(x + offSet);
@@ -41,12 +46,21 @@ function Ball({ boardRef }) {
         break;
     }
   };
+
   useEffect(() => {
     setTimeout(() => {
       const left = x + ballLimit.left;
       const top = y + ballLimit.top;
       const right = x + ballRef.current.offsetWidth;
       const bottom = y + ballRef.current.offsetHeight;
+      // 1 -> row
+      // -1 -> reverse row
+      // 2 -> col
+      // -2 -> rev col
+      // 3 -> diagonal
+      // -3 -> rev diagonal
+      // 4 -> anti-diagonal
+      // -4 -> rev anti-diagonal
       if (right > boardLimit.right) {
         if (move == 1) {
           setMove(-1);
@@ -82,11 +96,13 @@ function Ball({ boardRef }) {
       } else {
         handleMove();
       }
-    }, 1);
+    }, 5);
   }, [x, y]);
+
   useEffect(() => {
     handleMove();
   }, [move]);
+
   return <div className="ball" style={style} ref={ballRef}></div>;
 }
 

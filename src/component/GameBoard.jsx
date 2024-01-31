@@ -17,12 +17,13 @@ function GameBoard() {
   const [curCol, setcurCol] = useState(0);
   const [grid, setGrid] = useState(getGrid());
   const boardRef = useRef(null);
+  // const cellRef = useRef(null);
   useEffect(() => {
     // setCol(col+1);
-    console.log(boardRef.current.offsetLeft);
-    console.log(boardRef.current.offsetTop);
-    console.log(boardRef.current.offsetHeight);
-    console.log(boardRef.current.offsetWidth);
+    // console.log(boardRef.current.offsetLeft);
+    // console.log(boardRef.current.offsetTop);
+    // console.log(boardRef.current.offsetHeight);
+    // console.log(boardRef.current.offsetWidth);
   }, []);
   return (
     <>

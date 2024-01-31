@@ -9,15 +9,17 @@ const getBound = (ref) => {
 };
 
 function Ball({ boardRef }) {
-  const [move, setMove] = useState(3);
-  const [x, setX] = useState(0);
-  const [y, setY] = useState(0);
+  const [move, setMove] = useState(4);
+  const [x, setX] = useState(201);
+  const [y, setY] = useState(300);
   const [boardLimit, setBoardLimit] = useState({});
+  const [ballLimit, setBallLimit] = useState({});
   const ballRef = useRef(null);
   const style = { transform: `translate(${x}px,${y}px)` };
 
   useEffect(() => {
     setBoardLimit(getBound(boardRef));
+    setBallLimit(getBound(ballRef));
   }, []);
 
   const handleMove = () => {
@@ -41,39 +43,50 @@ function Ball({ boardRef }) {
   };
   useEffect(() => {
     setTimeout(() => {
-      const left = x;
-      const top = y;
+      const left = x + ballLimit.left;
+      const top = y + ballLimit.top;
       const right = x + ballRef.current.offsetWidth;
       const bottom = y + ballRef.current.offsetHeight;
-
       if (right > boardLimit.right) {
-        if (move == 3) {
+        if (move == 1) {
+          setMove(-1);
+        } else if (move == 3) {
           setMove(-4);
         } else {
-          setMove(-1);
+          setMove(-3);
         }
       } else if (left < boardLimit.left) {
-        if (move == 3 || move == -3) {
-          //   setMove(-1 * move);
-        } else {
+        if (move == -1) {
           setMove(1);
+        } else if (move == -4) {
+          setMove(3);
+        } else {
+          setMove(4);
         }
       } else if (top < boardLimit.top) {
-        if (move == 3 || move == -3) {
-          //   setMove(-1 * move);
-        } else {
+        if (move == -2) {
           setMove(2);
-        }
-      } else if (bottom > boardLimit.bottom) {
-        if (move == 3) {
+        } else if (move == -3) {
           setMove(-4);
         } else {
-          setMove(-2);
+          setMove(3);
         }
+      } else if (bottom > boardLimit.bottom) {
+        if (move == 2) {
+          setMove(-2);
+        } else if (move == 3) {
+          setMove(4);
+        } else {
+          setMove(-3);
+        }
+      } else {
+        handleMove();
       }
-      //   handleMove();
     }, 1);
-  }, [x, y, move]);
+  }, [x, y]);
+  useEffect(() => {
+    handleMove();
+  }, [move]);
   return <div className="ball" style={style} ref={ballRef}></div>;
 }
 

@@ -33,17 +33,23 @@ function GameBoard() {
         changeCell[i].push(true);
       }
     }
+    setDay(200);
+    setNight(200);
     setChangeCell([...changeCell]);
     setGrid(getGrid());
   }, []);
 
   const changeCellToDay = (i, j) => {
     changeCell[i][j] = true;
+    setDay(day + 1);
+    setNight(night - 1);
     setChangeCell([...changeCell]);
   };
 
   const changeCellToNight = (i, j) => {
     changeCell[i][j] = false;
+    setDay(day - 1);
+    setNight(night + 1);
     setChangeCell([...changeCell]);
   };
   return (
@@ -66,7 +72,7 @@ function GameBoard() {
             ballType={false}
             intital={{ x: 1, y: 300 }}
             changeCell={changeCell}
-            initMove={4}
+            initMove={3}
           />
         </>
       )}
@@ -89,6 +95,10 @@ function GameBoard() {
         <button className="startButton" onClick={() => setStart(!start)}>
           {start ? "stop" : "start"}
         </button>
+        <span className="score">
+          <span className="day-score">{day}</span>||
+          <span className="night-score">{night}</span>
+        </span>
       </span>
     </>
   );

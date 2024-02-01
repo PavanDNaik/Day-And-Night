@@ -28,11 +28,13 @@ function Ball({
 
   useEffect(() => {
     setBallLimit(getBound(ballRef));
-    setBoardLimit(getBound(boardRef));
-    setCellBound({
-      width: boardRef.current.offsetWidth / 20,
-      height: boardRef.current.offsetHeight / 20,
-    });
+    if (boardRef) {
+      setBoardLimit(getBound(boardRef));
+      setCellBound({
+        width: boardRef.current.offsetWidth / 20,
+        height: boardRef.current.offsetHeight / 20,
+      });
+    } 
   }, []);
 
   const handleMove = () => {

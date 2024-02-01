@@ -13,34 +13,36 @@ const getGrid = () => {
   return grid;
 };
 function GameBoard() {
-  const [curRow, setcurRow] = useState(0);
-  const [curCol, setcurCol] = useState(0);
-  const [grid, setGrid] = useState(getGrid());
+  const [changeCell, setChangeCell] = useState([]);
+  const [grid, setGrid] = useState([]);
   const boardRef = useRef(null);
   // const cellRef = useRef(null);
   useEffect(() => {
-    // setCol(col+1);
-    // console.log(boardRef.current.offsetLeft);
-    // console.log(boardRef.current.offsetTop);
-    // console.log(boardRef.current.offsetHeight);
-    // console.log(boardRef.current.offsetWidth);
+    for (let i = 0; i < 20; i++) {
+      changeCell.push([]);
+      for (let j = 0; j < 20; j++) {
+        changeCell[i].push(false);
+      }
+    }
+    setChangeCell([...changeCell]);
+    setGrid(getGrid());
   }, []);
+  const changeCellColor = (i, j) => {
+    changeCell[i][j] = true;
+    setChangeCell([...changeCell]);
+  };
   return (
     <>
-      <Ball boardRef={boardRef} />
+      <Ball boardRef={boardRef} changeCellColor={changeCellColor} />
       <div className="board-container" ref={boardRef}>
         {grid.map((row, i) => {
           return (
             <div className="grid-row" key={i}>
               {row.map((cell, j) => {
-                return (
-                  <Cell
-                    key={`${i}-${j}`}
-                    i={i}
-                    j={j}
-                    row={curRow}
-                    col={curCol}
-                  />
+                return changeCell && changeCell[j][i] ? (
+                  <Cell key={`${i}-${j}`} i={i} j={j} changeColor={true} />
+                ) : (
+                  <Cell key={`${i}-${j}`} i={i} j={j} changeColor={false} />
                 );
               })}
             </div>

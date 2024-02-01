@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-const SPEED = 50;
+const SPEED = 5;
 const getBound = (ref) => {
   const left = ref.current.offsetLeft;
   const top = ref.current.offsetTop;
@@ -8,10 +8,12 @@ const getBound = (ref) => {
   return { left, top, right, bottom };
 };
 
-function Ball({ boardRef }) {
-  const [move, setMove] = useState(3);
-  const [x, setX] = useState(47);
-  const [y, setY] = useState(6);
+const allowed = [];
+
+function Ball({ boardRef, changeCellColor }) {
+  const [move, setMove] = useState(4);
+  const [x, setX] = useState(110);
+  const [y, setY] = useState(110);
   const [boardLimit, setBoardLimit] = useState({});
   const [ballLimit, setBallLimit] = useState({});
   const [cellBound, setCellBound] = useState({});
@@ -26,25 +28,16 @@ function Ball({ boardRef }) {
       width: boardRef.current.offsetWidth / 20,
       height: boardRef.current.offsetHeight / 20,
     });
-  }, []);
-
-  useEffect(() => {
-    if (cellBound.width && cellBound.height) {
-      const currI = parseInt((x + ballLimit.right) / cellBound.width);
-      const currJ = parseInt((y + ballLimit.bottom) / cellBound.height);
-      if (currentCell.i !== currI || currentCell.j !== currJ) {
-        setCurrentCell({
-          i: currI,
-          j: currJ,
-        });
+    for (let i = 0; i < 20; i++) {
+      allowed.push([]);
+      for (let j = 0; j < 20; j++) {
+        allowed[i].push(false);
       }
     }
-  }, [cellBound, x, y]);
-  useEffect(() => {
-    console.log(currentCell);
-  }, [currentCell]);
+  }, []);
+
   const handleMove = () => {
-    let offSet = move > 0 ? 2 : -2;
+    let offSet = move > 0 ? 1 : -1;
     switch (Math.abs(move)) {
       case 1:
         setX(x + offSet);
@@ -69,14 +62,14 @@ function Ball({ boardRef }) {
   // -2 -> rev col
   // 3 -> diagonal
   // -3 -> rev diagonal
-  // 4 -> anti-diagonal
-  // -4 -> rev anti-diagonal
+  // 4 -> anti-diagonal />
+  // -4 -> rev anti-diagonal </
   function handleRightCollision() {
     if (move === 1) {
       setMove(-1);
     } else if (move === 3) {
       setMove(-4);
-    } else {
+    } else if (4) {
       setMove(-3);
     }
   }
@@ -86,7 +79,7 @@ function Ball({ boardRef }) {
       setMove(1);
     } else if (move === -4) {
       setMove(3);
-    } else {
+    } else if (-3) {
       setMove(4);
     }
   }
@@ -96,7 +89,7 @@ function Ball({ boardRef }) {
       setMove(2);
     } else if (move === -3) {
       setMove(-4);
-    } else {
+    } else if (4) {
       setMove(3);
     }
   }
@@ -105,11 +98,46 @@ function Ball({ boardRef }) {
       setMove(-2);
     } else if (move === 3) {
       setMove(4);
-    } else {
+    } else if (-4) {
       setMove(-3);
     }
   }
 
+  function handelCellCollision() {
+    if (!(cellBound.width && cellBound.height)) return;
+    const currI = parseInt((x + ballLimit.right) / cellBound.width);
+    const currJ = parseInt((y + ballLimit.bottom) / cellBound.height);
+    const prevI = currentCell.i;
+    const prevJ = currentCell.j;
+    setCurrentCell({
+      i: currI,
+      j: currJ,
+    });
+    if (currI >= 20 || currJ >= 20 || allowed[currI][currJ]) return;
+    if (prevI === currI && prevJ === currJ) return;
+    allowed[currI][currJ] = true;
+    changeCellColor(currI, currJ);
+
+    if (prevI < currI && prevJ < currJ) {
+      // diagonal next cell
+      setMove(-4);
+    } else if (prevI > currI && prevJ > currJ) {
+      // diagonal next cell
+      setMove(4);
+    } else if (prevI < currI && prevJ > currJ) {
+      // anti diagonal prev cell
+      setMove(3);
+    } else if (prevI > currI && prevJ < currJ) {
+      // anti diagonal next cell
+      setMove(-3);
+    } else if (prevI == currI) {
+      if (prevJ < currJ) handleRightCollision();
+      else handleLeftCollision();
+    } else if (prevJ == currJ) {
+      if (prevI < currI) handleBottomCollision();
+      else handleTopCollision();
+    }
+  }
   useEffect(() => {
     setTimeout(() => {
       const left = x + ballLimit.left;
@@ -126,13 +154,14 @@ function Ball({ boardRef }) {
       } else if (bottom > boardLimit.bottom) {
         handleBottomCollision();
       } else {
-        // handleMove();
+        handelCellCollision();
+        handleMove();
       }
     }, SPEED);
   }, [x, y]);
 
   useEffect(() => {
-    // handleMove();
+    handleMove();
   }, [move]);
 
   return <div className="ball" style={style} ref={ballRef}></div>;

@@ -19,6 +19,7 @@ function Ball({
   const style = { transform: `translate(${x}px,${y}px)` };
   const SPEED = 5;
   const getBound = (ref) => {
+    if (!ref || !ref.current) return;
     const left = ref.current.offsetLeft;
     const top = ref.current.offsetTop;
     const right = ref.current.offsetHeight;
@@ -34,7 +35,7 @@ function Ball({
         width: boardRef.current.offsetWidth / 20,
         height: boardRef.current.offsetHeight / 20,
       });
-    } 
+    }
   }, []);
 
   const handleMove = () => {
@@ -150,6 +151,7 @@ function Ball({
   }
   useEffect(() => {
     setTimeout(() => {
+      if (!ballRef || !ballRef.current) return;
       const left = x + ballLimit.left;
       const top = y + ballLimit.top;
       const right = x + ballRef.current.offsetWidth;

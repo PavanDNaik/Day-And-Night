@@ -12,6 +12,10 @@ const getGrid = () => {
   }
   return grid;
 };
+const getRandom = () => {
+  let a = [1, 3, 4];
+  return a[Math.round(Math.random() * 2)];
+};
 function GameBoard() {
   const [changeCell, setChangeCell] = useState([]);
   const [day, setDay] = useState(0);
@@ -63,7 +67,7 @@ function GameBoard() {
             ballType={true}
             intital={{ x: 590, y: 300 }}
             changeCell={changeCell}
-            initMove={3}
+            initMove={getRandom()}
           />
           <Ball
             boardRef={boardRef}
@@ -72,7 +76,7 @@ function GameBoard() {
             ballType={false}
             intital={{ x: 1, y: 300 }}
             changeCell={changeCell}
-            initMove={3}
+            initMove={getRandom()}
           />
         </>
       )}

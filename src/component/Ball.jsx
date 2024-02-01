@@ -123,7 +123,7 @@ function Ball({
       i: currI,
       j: currJ,
     });
-    if (!changeCell) return;
+    if (!changeCell || !initMove) return;
     if (changeCell[currI][currJ] === ballType) return;
     if (
       (currI === intital.x && currI == intital.y) ||

@@ -12,7 +12,7 @@
 }
 .cell{
   flex: 1;
-  border: 0.2px solid black;
+  /* border: 0.2px solid black; */
 }
 .grid-row{
   display: flex;
@@ -20,42 +20,16 @@
 }
 .ball{
   position: fixed;
-  background-color: black;
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  /* top: 10px;
-  left: 50px; */
-  /* animation: move-Diagonal infinite linear 3s; */
-  transform: translate(5px 5px);
 }
 
-@keyframes move-right {
-  to{
-    transform: translateX(90vh);
-  }
+.ball.day{
+  background-color: #dcfce7;
+  border: 2px solid white;
 }
-
-@keyframes move-up {
-  to{
-    transform: translateY(-90vh);
-  }
-}
-
-@keyframes move-Diagonal {
-  to{
-    transform: translate(90vh,90vh);
-  }
-}
- 
-@keyframes move-left {
-  to{
-    transform: translateX(-90vh);
-  }
-}
-
-@keyframes move-down {
-  to{
-    transform: translateY(90vh);
-  }
+.ball.night{
+  background-color: #064e3b;
+  border: 2px solid #0a0a0a;
 }

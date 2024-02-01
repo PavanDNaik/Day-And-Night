@@ -14,26 +14,57 @@ const getGrid = () => {
 };
 function GameBoard() {
   const [changeCell, setChangeCell] = useState([]);
+  const [day, setDay] = useState(0);
+  const [night, setNight] = useState(0);
   const [grid, setGrid] = useState([]);
   const boardRef = useRef(null);
   // const cellRef = useRef(null);
   useEffect(() => {
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 10; i++) {
       changeCell.push([]);
       for (let j = 0; j < 20; j++) {
         changeCell[i].push(false);
       }
     }
+    for (let i = 10; i < 20; i++) {
+      changeCell.push([]);
+      for (let j = 0; j < 20; j++) {
+        changeCell[i].push(true);
+      }
+    }
     setChangeCell([...changeCell]);
     setGrid(getGrid());
   }, []);
-  const changeCellColor = (i, j) => {
+
+  const changeCellToDay = (i, j) => {
     changeCell[i][j] = true;
+    setChangeCell([...changeCell]);
+  };
+
+  const changeCellToNight = (i, j) => {
+    changeCell[i][j] = false;
     setChangeCell([...changeCell]);
   };
   return (
     <>
-      <Ball boardRef={boardRef} changeCellColor={changeCellColor} />
+      <Ball
+        boardRef={boardRef}
+        changeCellColor={changeCellToDay}
+        key={"day"}
+        ballType={true}
+        intital={{ x: 590, y: 300 }}
+        changeCell={changeCell}
+        initMove={3}
+      />
+      <Ball
+        boardRef={boardRef}
+        changeCellColor={changeCellToNight}
+        key={"night"}
+        ballType={false}
+        intital={{ x: 1, y: 300 }}
+        changeCell={changeCell}
+        initMove={4}
+      />
       <div className="board-container" ref={boardRef}>
         {grid.map((row, i) => {
           return (

@@ -76,7 +76,7 @@ function GameBoard() {
             ballType={false}
             intital={{ x: 1, y: 300 }}
             changeCell={changeCell}
-            initMove={getRandom()}
+            initMove={getRandom() * -1}
           />
         </>
       )}

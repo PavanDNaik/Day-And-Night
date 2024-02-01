@@ -151,7 +151,7 @@ function Ball({
   }
   useEffect(() => {
     setTimeout(() => {
-      if (!ballRef || !ballRef.current) return;
+      if (!ballRef || !ballRef.current || !ballLimit) return;
       const left = x + ballLimit.left;
       const top = y + ballLimit.top;
       const right = x + ballRef.current.offsetWidth;

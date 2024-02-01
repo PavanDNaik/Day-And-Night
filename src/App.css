@@ -33,3 +33,14 @@
   background-color: #064e3b;
   border: 2px solid #0a0a0a;
 }
+.startButton{
+  color: #064e3b;
+  background-color: #dcfce7;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 10px;
+}
+
+.right-container{
+  display: inline;
+}

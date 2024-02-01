@@ -17,6 +17,7 @@ function GameBoard() {
   const [day, setDay] = useState(0);
   const [night, setNight] = useState(0);
   const [grid, setGrid] = useState([]);
+  const [start, setStart] = useState(false);
   const boardRef = useRef(null);
   // const cellRef = useRef(null);
   useEffect(() => {
@@ -47,25 +48,29 @@ function GameBoard() {
   };
   return (
     <>
-      <Ball
-        boardRef={boardRef}
-        changeCellColor={changeCellToDay}
-        key={"day"}
-        ballType={true}
-        intital={{ x: 590, y: 300 }}
-        changeCell={changeCell}
-        initMove={3}
-      />
-      <Ball
-        boardRef={boardRef}
-        changeCellColor={changeCellToNight}
-        key={"night"}
-        ballType={false}
-        intital={{ x: 1, y: 300 }}
-        changeCell={changeCell}
-        initMove={4}
-      />
-      <div className="board-container" ref={boardRef}>
+      {start && (
+        <>
+          <Ball
+            boardRef={boardRef}
+            changeCellColor={changeCellToDay}
+            key={"day"}
+            ballType={true}
+            intital={{ x: 590, y: 300 }}
+            changeCell={changeCell}
+            initMove={3}
+          />
+          <Ball
+            boardRef={boardRef}
+            changeCellColor={changeCellToNight}
+            key={"night"}
+            ballType={false}
+            intital={{ x: 1, y: 300 }}
+            changeCell={changeCell}
+            initMove={4}
+          />
+        </>
+      )}
+      <span className="board-container" ref={boardRef}>
         {grid.map((row, i) => {
           return (
             <div className="grid-row" key={i}>
@@ -79,7 +84,12 @@ function GameBoard() {
             </div>
           );
         })}
-      </div>
+      </span>
+      <span className="right-container">
+        <button className="startButton" onClick={() => setStart(!start)}>
+          {start ? "stop" : "start"}
+        </button>
+      </span>
     </>
   );
 }

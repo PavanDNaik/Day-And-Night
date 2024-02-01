@@ -36,7 +36,7 @@ function Ball({
         height: boardRef.current.offsetHeight / 20,
       });
     }
-  }, []);
+  }, [boardRef]);
 
   const handleMove = () => {
     let offSet = move > 0 ? 1 : -1;

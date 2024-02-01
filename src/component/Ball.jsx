@@ -106,7 +106,15 @@ function Ball({
   }
 
   function handelCellCollision() {
-    if (!(cellBound.width && cellBound.height)) return;
+    if (
+      !cellBound ||
+      !cellBound.width ||
+      !cellBound.height ||
+      !ballLimit ||
+      !ballLimit.right ||
+      !ballLimit.bottom
+    )
+      return;
     const currI = parseInt((x + ballLimit.right) / cellBound.width);
     const currJ = parseInt((y + ballLimit.bottom) / cellBound.height);
     const prevI = currentCell.i;

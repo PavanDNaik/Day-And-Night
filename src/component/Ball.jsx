@@ -124,7 +124,6 @@ function Ball({
       j: currJ,
     });
     if (!changeCell || !initMove) return;
-    if (changeCell[currI][currJ] === ballType) return;
     if (
       (currI === intital.x && currI == intital.y) ||
       currI < 0 ||
@@ -133,6 +132,7 @@ function Ball({
       currI >= 20
     )
       return;
+    if (changeCell[currI][currJ] === ballType) return;
     if (prevI === currI && prevJ === currJ) return;
 
     if (prevI < currI && prevJ < currJ) {

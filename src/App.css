@@ -3,6 +3,9 @@
   margin: 0;
   box-sizing: border-box;
 }
+body{background: rgb(220,252,233);
+background: linear-gradient(0deg, rgba(220,252,233,1) 0%, rgba(17,107,70,1) 97%);
+}
 .gamePage{
   height: 100vh;
   display: flex;

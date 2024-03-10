@@ -3,10 +3,10 @@ import GameBoard from '../component/GameBoard'
 
 function GamePage() {
   return (
-    <div>
-        <GameBoard/>
+    <div className="gamePage">
+      <GameBoard />
     </div>
-  )
+  );
 }
 
 export default GamePage

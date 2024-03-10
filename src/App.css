@@ -3,6 +3,13 @@
   margin: 0;
   box-sizing: border-box;
 }
+.gamePage{
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .board-container{
   height: 90vh;
   width: 90vh;
@@ -20,9 +27,11 @@
 }
 .ball{
   position: fixed;
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
   border-radius: 50%;
+  left: 0;
+  top: 0;
 }
 
 .ball.day{

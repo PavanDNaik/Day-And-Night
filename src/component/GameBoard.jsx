@@ -16,13 +16,24 @@ const getRandom = () => {
   let a = [1, 3, 4];
   return a[Math.round(Math.random() * 2)];
 };
+
+const getBound = (ref) => {
+  if (!ref || !ref.current) return;
+  const left = ref.current.offsetLeft;
+  const top = ref.current.offsetTop;
+  const right = ref.current.offsetWidth;
+  const bottom = ref.current.offsetHeight;
+  return { left, top, right, bottom };
+};
+
 function GameBoard() {
   const [changeCell, setChangeCell] = useState([]);
-  const [day, setDay] = useState(0);
-  const [night, setNight] = useState(0);
+  const [day, setDay] = useState(200);
+  const [night, setNight] = useState(200);
   const [grid, setGrid] = useState([]);
   const [start, setStart] = useState(false);
   const boardRef = useRef(null);
+  const [bound, setBound] = useState({});
   // const cellRef = useRef(null);
   useEffect(() => {
     for (let i = 0; i < 10; i++) {
@@ -37,10 +48,9 @@ function GameBoard() {
         changeCell[i].push(true);
       }
     }
-    setDay(200);
-    setNight(200);
     setChangeCell([...changeCell]);
     setGrid(getGrid());
+    setBound(getBound(boardRef));
   }, []);
 
   const changeCellToDay = (i, j) => {
@@ -65,7 +75,10 @@ function GameBoard() {
             changeCellColor={changeCellToDay}
             key={"day"}
             ballType={true}
-            intital={{ x: 590, y: 300 }}
+            intital={{
+              x: bound.left + bound.right - 45,
+              y: bound.top + bound.bottom / 2,
+            }}
             changeCell={changeCell}
             initMove={getRandom()}
           />
@@ -74,7 +87,10 @@ function GameBoard() {
             changeCellColor={changeCellToNight}
             key={"night"}
             ballType={false}
-            intital={{ x: 1, y: 300 }}
+            intital={{
+              x: bound.left + 50,
+              y: bound.top + bound.bottom / 2,
+            }}
             changeCell={changeCell}
             initMove={getRandom() * -1}
           />

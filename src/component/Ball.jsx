@@ -1,4 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
+  // 1 -> row
+  // -1 -> reverse row
+  // 2 -> col
+  // -2 -> rev col
+  // 3 -> diagonal
+  // -3 -> rev diagonal
+  // 4 -> anti-diagonal />
+  // -4 -> rev anti-diagonal </
+const ROW_DIRECTION = 1;
+const COL_DIRECTION = 2;
+const DIAG_DIRECTION = 3;
+const ANTI_DIAG_DIRECTION = 4;
+const REVERSE_ROW_DIRECTION = -1;
+const REVERSE_COL_DIRECTION = -2;
+const REVERSE_DIAG_DIRECTION = -3;
+const REVERSE_ANTI_DIAG_DIRECTION = -4;
 
 function Ball({
   boardRef,
@@ -17,13 +33,13 @@ function Ball({
   const [currentCell, setCurrentCell] = useState({ i: 0, j: 0 });
   const ballRef = useRef(null);
   const style = { transform: `translate(${x}px,${y}px)` };
-  const SPEED = 5;
+  const SPEED = 2;
   const getBound = (ref) => {
     if (!ref || !ref.current) return;
     const left = ref.current.offsetLeft;
     const top = ref.current.offsetTop;
-    const right = ref.current.offsetHeight;
-    const bottom = ref.current.offsetWidth;
+    const right = left + ref.current.offsetWidth;
+    const bottom = top + ref.current.offsetHeight;
     return { left, top, right, bottom };
   };
 
@@ -41,84 +57,68 @@ function Ball({
   const handleMove = () => {
     let offSet = move > 0 ? 1 : -1;
     switch (Math.abs(move)) {
-      case 1:
+      case ROW_DIRECTION:
         setX(x + offSet);
         break;
-      case 2:
+      case COL_DIRECTION:
         setY(y + offSet);
         break;
-      case 3:
+      case DIAG_DIRECTION:
         setX(x + offSet);
         setY(y + offSet);
         break;
-      case 4:
+      case ANTI_DIAG_DIRECTION:
         setX(x + offSet);
         setY(y - offSet);
         break;
     }
   };
 
-  // 1 -> row
-  // -1 -> reverse row
-  // 2 -> col
-  // -2 -> rev col
-  // 3 -> diagonal
-  // -3 -> rev diagonal
-  // 4 -> anti-diagonal />
-  // -4 -> rev anti-diagonal </
   function handleRightCollision() {
-    if (move === 1) {
-      setMove(-1);
-    } else if (move === 3) {
-      setMove(-4);
-    } else if (4) {
-      setMove(-3);
+    if (move === ROW_DIRECTION) {
+      setMove(REVERSE_ROW_DIRECTION);
+    } else if (move === DIAG_DIRECTION) {
+      setMove(REVERSE_ANTI_DIAG_DIRECTION);
+    } else if (ANTI_DIAG_DIRECTION) {
+      setMove(REVERSE_DIAG_DIRECTION);
     }
   }
 
   function handleLeftCollision() {
-    if (move === -1) {
-      setMove(1);
-    } else if (move === -4) {
-      setMove(3);
-    } else if (-3) {
-      setMove(4);
+    if (move === REVERSE_ROW_DIRECTION) {
+      setMove(ROW_DIRECTION);
+    } else if (move === REVERSE_ANTI_DIAG_DIRECTION) {
+      setMove(DIAG_DIRECTION);
+    } else if (REVERSE_DIAG_DIRECTION) {
+      setMove(ANTI_DIAG_DIRECTION);
     }
   }
 
   function handleTopCollision() {
-    if (move === -2) {
-      setMove(2);
-    } else if (move === -3) {
-      setMove(-4);
-    } else if (4) {
-      setMove(3);
+    if (move === REVERSE_COL_DIRECTION) {
+      setMove(COL_DIRECTION);
+    } else if (move === REVERSE_DIAG_DIRECTION) {
+      setMove(REVERSE_ANTI_DIAG_DIRECTION);
+    } else if (ANTI_DIAG_DIRECTION) {
+      setMove(DIAG_DIRECTION);
     }
   }
   function handleBottomCollision() {
-    if (move === 2) {
-      setMove(-2);
-    } else if (move === 3) {
-      setMove(4);
-    } else if (-4) {
-      setMove(-3);
+    if (move === COL_DIRECTION) {
+      setMove(REVERSE_COL_DIRECTION);
+    } else if (move === DIAG_DIRECTION) {
+      setMove(ANTI_DIAG_DIRECTION);
+    } else if (REVERSE_ANTI_DIAG_DIRECTION) {
+      setMove(REVERSE_DIAG_DIRECTION);
     }
   }
 
   function handelCellCollision() {
-    if (
-      !cellBound ||
-      !cellBound.width ||
-      !cellBound.height ||
-      !ballLimit ||
-      !ballLimit.right ||
-      !ballLimit.bottom
-    )
-      return;
-    const currI = parseInt((x + ballLimit.right) / cellBound.width);
-    const currJ = parseInt((y + ballLimit.bottom) / cellBound.height);
+    const currI = parseInt((x - boardLimit.left) / cellBound.width);
+    const currJ = parseInt((y - boardLimit.top) / cellBound.height);
     const prevI = currentCell.i;
     const prevJ = currentCell.j;
+    if(!currI || !currJ)return;
     setCurrentCell({
       i: currI,
       j: currJ,
@@ -132,21 +132,21 @@ function Ball({
       currI >= 20
     )
       return;
+
     if (changeCell[currI][currJ] === ballType) return;
-    if (prevI === currI && prevJ === currJ) return;
 
     if (prevI < currI && prevJ < currJ) {
       // diagonal next cell
-      setMove(-4);
+      setMove(REVERSE_ANTI_DIAG_DIRECTION);
     } else if (prevI > currI && prevJ > currJ) {
       // diagonal next cell
-      setMove(4);
+      setMove(ANTI_DIAG_DIRECTION);
     } else if (prevI < currI && prevJ > currJ) {
       // anti diagonal prev cell
-      setMove(3);
+      setMove(DIAG_DIRECTION);
     } else if (prevI > currI && prevJ < currJ) {
       // anti diagonal next cell
-      setMove(-3);
+      setMove(REVERSE_DIAG_DIRECTION);
     } else if (prevI == currI) {
       // same row
       if (prevJ < currJ) handleRightCollision();
@@ -165,7 +165,6 @@ function Ball({
       const top = y + ballLimit.top;
       const right = x + ballRef.current.offsetWidth;
       const bottom = y + ballRef.current.offsetHeight;
-
       if (right > boardLimit.right) {
         handleRightCollision();
       } else if (left < boardLimit.left) {
